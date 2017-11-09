@@ -1,18 +1,23 @@
 {
-  "name": "recaptcha-validator",
-  "version": "1.0.1",
-  "description": "A simple and correct google recaptcha library to validate recaptcha's",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/ohomer/recaptcha-validator"
-  },  
-  "author": "Ohomer",
-  "license": "MIT",
-  "dependencies": {
-    "debug": "^2.2.0"
-  }
+    "name": "recaptcha-validator",
+    "version": "1.0.1",
+    "description": "a simple google recaptcha api library to validate recaptchas",
+    "main": "index.js",
+    "scripts": {
+        "start-example": "cd example && node .",
+        "patch": "npm version patch && npm publish",
+        "minor": "npm version minor && npm publish",
+        "major": "npm version major && npm publish",
+        "postpublish": "git push origin master --follow-tags",
+        "deploy": "git pull --rebase origin master && git push origin master"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/danneu/recaptcha-validator"
+    },
+    "author": "Dan Neumann",
+    "license": "MIT",
+    "dependencies": {
+        "debug": "^2.2.0"
+    }
 }

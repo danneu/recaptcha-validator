@@ -1,59 +1,48 @@
-Recaptcha Validator
------------------
+# recaptcha-validator
 
-Just a simple library to correctly validate google recaptcha requests. Supports both promises and callbacks
+A simple library that makes API requests to Google's Recaptcha
+service to confirm Recaptcha tokens.
 
+<https://developers.google.com/recaptcha/intro>
 
-Usage:
+Supports Recaptcha v2 / Invisible.
 
-```
-var recaptchaValidator = require('recaptcha-validator');
-var promise = recaptchaValidate.promise(secret, response, remoteIp);
-```
+```javascript
+const recaptcha = require('recaptcha-validator')
 
-The promise is fulfilled if the recaptcha could be validated, if not it is resolved with an error. Most of the time the
-error will be a plain string direct from google: `missing-input-secret`, `invalid-input-secret`, `missing-input-response`,
- `invalid-input-response` or `unspecified-error`  but in the case of network issues it'll be a normal error object.
-
- Perfect to yield with co/koa!
-
-
-Co Usage
-=========
-
-
-```
-co(function*() {
-    try {
-      yield recaptchaValidator.promise(secret, response, remoteIp);
-      console.log('all good! proceed');
-    } catch (ex) {
-      if (typeof ex === 'string')
-        console.error('Error from google:', ex);
-      else
-        console.error('General exception:', ex);
-    }
-});
-
+recaptcha(sitesecret, gRecaptchaResponse, clientIpAddress)
+  .then(reply => console.log(reply))
+  .catch(err => console.error('recaptcha confirmation failed:', err))
 ```
 
+## Usage
 
+Check out the `example/` folder for a complete but minimal example.
 
-Callback usage
-======
+`recaptcha()` returns a promise that resolves with google's reply
+if the request was successful.
 
+It fails with `typeof err === 'string'` if the recaptcha api
+reports a problem with the request.
+
+- missing-input-secret: The secret parameter is missing.
+- invalid-input-secret: The secret parameter is invalid or malformed.
+- missing-input-response: The response parameter is missing.
+- invalid-input-response: The response parameter is invalid or malformed.
+- bad-request: The request is invalid or malformed.
+- unspecified-error
+
+Else the error will be an `Error` object representing network error.
+
+Here's an example response upon success:
+
+```json
+{ success: true,
+  challenge_ts: '2017-11-09T23:12:08Z',
+  hostname: 'localhost' }
 ```
-var recaptchaValidator = require('recaptcha-validator');
 
-recaptchaValidator.callback(secret, response, remoteIp, function(err) {
-     if (err) {
-       if (typeof err === 'string')
-        console.error('Error from google:', err);
-       else
-        console.error('General exception:', err);
-       return;
-     }
-     console.log('All good, proceed');
-});
+`hostname` only appears on successful requests and you can use it to
+ensure recaptcha submissions are originating from your domain.
 
-```
+More info: https://developers.google.com/recaptcha/docs/domain_validation
