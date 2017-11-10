@@ -36,7 +36,7 @@ Else the error will be an `Error` object representing network error.
 
 Here's an example response upon success:
 
-```json
+```javascript
 { success: true,
   challenge_ts: '2017-11-09T23:12:08Z',
   hostname: 'localhost' }
